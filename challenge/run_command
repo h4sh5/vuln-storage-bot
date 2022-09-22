@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ ! -f "$STORAGE_FOLDER/$1" ]; then
+  dd if=/dev/zero "of=$STORAGE_FOLDER/$1" bs=1M count=1 
+  mkfs -t ext4 "$STORAGE_FOLDER/$1" > /dev/null
+fi
+mkdir -p "$MOUNTS_FOLDER/$1"
+mount "$STORAGE_FOLDER/$1" "$MOUNTS_FOLDER/$1"
+nsjail -M o --chroot "$MOUNTS_FOLDER/$1" --rw --config nsjail.cfg -- /bin/bash -c "$2" || true
+umount "$MOUNTS_FOLDER/$1"
