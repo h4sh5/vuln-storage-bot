@@ -1,7 +1,11 @@
 module.exports = {
     name: "interactionCreate",
     async execute(interaction) {
-        if (!interaction.isChatInputCommand() || !interaction.guild) return;
+        if (!interaction.isChatInputCommand()) return;
+
+        if (!interaction.guild) {
+            return await interaction.reply("I only work on discord guilds/servers. Sorry about that :)");
+        }
 
         const guildRoles = await interaction.guild.roles.fetch();
         const roleManager = interaction.member.roles;
